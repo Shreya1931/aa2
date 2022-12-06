@@ -1,0 +1,26 @@
+Fail2ban
+
+sudo apt-get install fail2ban
+sudo nano etc/fail2ban/jail.conf
+now in default
+	search ignoreIP and set as: 127.0.0.`/8 IP with subnet
+	bantime = As per question
+	maxrentry = As per question
+	backend = auto 
+Now in SSH
+	enabled = true
+	port = ssh
+	filter = sshd
+	logpath = /var/log/auth.log/auth
+	maxrentry = as per question
+	
+sudo /etc/init.d/fail2ban restart
+sudo iptables -L
+sudo cat /var/log/fail2ban.log
+sudo iptables -L
+
+
+
+*Remove Blocked IP Address 
+sudo iptables -D fail2ban-ssh 1
+sudo /etc/init.d/fail2ban restart

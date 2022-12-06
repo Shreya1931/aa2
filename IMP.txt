@@ -1,0 +1,61 @@
+How to Find open Logical ports
+
+-netstat
+-netstat -a(all)
+-netstat -ap(all protocols)
+-netstat -anp(all protocols with no dns) 
+
+commands in debian 
+
+ss -ant (for all numeric tcp)
+ss -anu (for udp)
+
+
+
+
+
+**SQL**
+mariadb port 3306
+
+ss -ant | grep 3306
+sudo apt-get install mariadb-server
+ss -ant | grep 3306
+ss -ant
+sudo systemctl status mariadb.service
+sudo systemctl stop mariadb.service
+sudo systemctl start mariadb.service
+
+sudo mysql -u root -p
+SHOW DATABASES;
+CREATE DATABASES IF NOT EXISTS my_db;
+USE my_db;
+SHOW TABLES;
+
+CREATE TBALE IF NOT EXISTS users (
+id int(5) NOT NULL AUTO_INCREAMENT,
+username varchar(30) NOT NULL,
+password varchar(32) NOT NULL,
+PRIMARY KEY (id),
+UNIQUE (username)
+);
+
+SHOW TABLES;
+DESC users;
+
+INSERT INTO users VALUES(1,'abC','pw');
+INSERT INTO users (id,password,username) VALUES (2,'cde','pm');
+INSERT INTO users (password,username) VALUES ('xyz','cm');
+
+
+SELECT * FROM users WHERE id=3;
+
+UPDATE users SET passwod='dm' WHERE id=3;
+
+ALTER TABLE users ADD COLUMN fname VARCHAR(500 not null after id;
+
+ALTER TABLE users ADD COLUMN lname VARCHAR(500 not null after fname;
+
+
+
+mkdir 20221125 
+sudo mysqldump --user root my_db > bacup.txt

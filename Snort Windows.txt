@@ -1,0 +1,128 @@
+Snort: Open source IDS
+
+Install Snort
+Install WinPcap
+
+Open CMD Run as a Administator
+
+Extract Tar file(sir gave) then again extract file in path of C->snort
+
+
+c->cd snort->cd bin
+	snort -W
+	snort -i 1
+
+Snort Flag
+	-W: List of Interface	
+	-i: Interface
+	-d: Application layer
+	-e: Link layer
+	-v: Verbose
+	-t: Test conf file
+	-l: log file
+	-c: 
+
+**snort -i 1(one) -c C:\snort\etc\snort.cong -l(L hai ye) C:\snort\log -A console
+
+Err1: ipvar
+open snort.conf file from c/snort/etc open in notepad++ and replace all text ipvar with var
+
+Err2: snort_dynamicpreprocessor
+open c/snort/lib/snort_dynamicpreprocessor copy the folder path..In same folder Shift+right click and open a powershell 
+In powershell: cmd and then dir /b copy all and paste into new notepad++ file and edit as dynamicpreprocess and path of that folder with all file copies from powershell.
+Again all copy and paste into the 247 line in snort.conf file
+
+Err3: snort_dynamicengine
+open c/snort/lib/snort_dynamicengine copy folder path and file path from that folder paste into line number 262
+
+Err4: snort_dynamicrules
+Open c/snort/lib and make a new folder as snort_dynamicrules, copy the path and paste into line number 265 in snort.conf file.
+
+Err5: normalize-ip4
+Search in conf file and comment all.
+
+Err6:
+Create empty file white_list.rules in c/snort/rules
+
+Err7:
+Create empty file black_list.rules in c/snort/rules
+
+
+
+
+Changes
+
+In snort.conf file
+Line number 104
+
+change
+var RULE_PATH../rules
+var SO_RULE ../SO_rules
+var PREPROC_RULE_PATH ..preproc_rules
+
+to
+var RULE_PATH c:\snort\rules
+var SO_RULE_PATH c:\snort\so_rules
+var PREPROC_RULE_PATH c:\snort\preproc_rules
+
+Line number 113
+
+change
+var WHITE_LIST_PATH ../rules
+var BLACK_LIST_PATH ../rules
+
+to
+var WHITE_LIST_PATH ..\rules
+var BLACK_LIST_PATH ..\rules
+
+Line number 525
+
+change
+whitelist $WHITE_LIST_PATH/white_list.rules
+blacklist $BLACK_LIST_PATH/black_list.rules
+
+to
+
+whitelist $WHITE_LIST_PATH\white_list.rules
+blacklist $BLACK_LIST_PATH\black_list.rules
+
+Line number 572
+
+Modify to black_list.rules
+
+
+
+
+
+alert ip any any 			-> any any (msg:"";sid:1000001;)
+	    |   |			    |	   |
+   source ip source port	Dest ip  Dest port	
+
+sid: Source ID
+
+
+
+Notepad++ type above command and save with .rules in rules folder
+
+Line number 568
+edit that our name.rules with local.rules
+
+
+
+
+
+LOG Server
+
+Application
+Security 
+system
+
+
+Line 543
+output alert_syslog: host =192.168.80.129:514, LOG_AUTH LOG_ALERT
+
+
+Install Syslog
+
+
+ctrl T(Tets its working or not)  

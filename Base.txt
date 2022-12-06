@@ -1,0 +1,230 @@
+snort : It will give binary format and then some tools convert into normal form and send to the database.
+Barnyard2 : It is a open source interpreter for snort unified2 binary output files.
+			Allows snort to write to disk in an efficient manner and leaving the task of parsing binary data into various faormats to a separate process that will not cause snort to miss network traffic.
+			
+
+
+LEB
+
+putty
+static ip
+sudo apt-get update
+sudo apt-get install bison flex gcc libdnet libdumbnet-dev libluajit-5.1-dev libnghttp2-dev libpcap-dev libpcre3-dev libssl-dev make openssl wget zlib1g-dev
+sudo mkdir /usr/src/snort_src
+cd /usr/src/snort_src
+sudo wget -q(for skipping installation process) path of our daq library
+ls -l
+sudo tar zxf (that file) (daq is library)(ZXF: zip extract file)
+ls -l
+cd that file
+ls
+./configure
+make
+sudo make install
+
+same for snort soft
+download 
+extract 
+change directory
+
+sudo ldconfig
+snort -v
+
+sudo ln -s /usr/local/bin/snort usr/sbin/snort
+sudo groupadd snort
+sudo useradd snort -r -s /usr/sbin/nologin -c SNORT_IDS -g snort
+[-s: system use only,no login
+-r: create sys account
+-c:comment
+-g: group]
+sudo mkdir -p /etc/snort/rules
+sudo mkdir /var/log/snort
+sudo mkdir /usr/local/lib/snort_dynamicrules
+sudo cp /usr/src/snort_src/snort-2.9.15/etc/*.conf* /etc/snort/
+sudo cp /usr/src/snort_src/snort-2.9.15/etc/*.map /etc/snort/
+sudo touch /etc/snort/rules/white_list.rules
+sudo touch /etc/snort/rules/black_list.rules
+sudo touch /etc/snort/rules/local.rules
+
+sudo chmod -R 5775 /etc/snort/
+sudo chmod -R 5775 /var/log/snort/
+sudo chmod -R 5775 /usr/local/lib/snort_dynamicrules
+sudo chown -R snort:snort /etc/snort/
+sudo chown -R snort:snort /var/log/snort/
+sudo chown -R snort:snort /usr/local/lib/snort_dynamicrules
+make a backup file of snort.conf
+nano snort.conf
+
+r
+c/snort/rules mdhe
+......../etc/snort/rules
+/etc/snort/so_rules
+/etc/snort/preproc_rules
+
+WHITE_LIST /etc/snort/rukes
+same for BLACK LIST
+
+
+in step 7
+site specific rules
+delete or comment all the lines and add 3 new lines as
+include $RULE_PATH/local.rules
+include $RULE_PATH/white_list.rules
+include $RULE_PATH/black_list.rules
+save this
+
+
+
+
+sudo snort -T -c /etc/snort/snort.conf
+sudo nano /etc/snort/rules/local.rules
+alert ip any any 			-> any any (msg:" ";sid:1000001;)
+
+sudo snort -i ens33 -u snort -g snort -c /etc/snort/snort.conf -A console
+
+
+
+
+
+
+*INSTALLATION FOR BARNYARD
+sudo apt-get install autoconf automake default-libmysqlclient-dev dos2unix libmariadbclient-dev libmariadbd-dev libtool mariadb-client mariadb-server unzip
+In Snort.conf step6, output modified:filename snort.u2, limit 128
+
+*DOWNLOAD AND INSTALL BARNYARD2
+make a directory and download and extract that zip file from sir site.
+unzip that file > /dev/null 
+then enter into unzip folder and eun this command sudo ./autogen.sh (for configure file)
+sudo ln -s /usr/include/dumbnet.h /usr/include/dnet.h
+sudo ldconfig
+sudo ./configure --with-mysql --with-mysql-libraries=/usr/lib/x86_64-linux-gnu/
+sudo make 
+sudo make install
+sudo cp etc/barnyard2.conf /etc/snort/
+sudo mkdir /var/log/barnyard2
+sudo chown snort.snort /var/log/barnyard2
+sudo touch /var/log/snort/barnyard2.waldo
+sudo chown snort.snort /var/log/snort/barnyard2.waldo
+
+mysql -u root -p 
+create databse snort;
+use mysql;
+SELECT Host, User, Password, plugin FROM user;
+UPDATE user set plugin='' WHERE user='root';
+SELECT Host, User, Password, plugin FROM user;
+FLUSH PRIVILEGES; (applying changes authentication)
+exit
+
+sudo systemctl restart mariadb.service
+sudo mysql_secure_installation
+mysql -u root -p
+use snort
+source path of the schemas and create_mysql
+CREATE USER 'snort'@'localhost' IDENTIFIED BY 'toor';
+GRANT CREATE, INSERT, SELECT, DELETE, UPDATE ON snort.* TO 'snort'@'localhost';
+FLSUH PRIVILEGES;
+EXIT
+
+
+sudo nano /etc/snort/barnyard.conf
+add this last line
+output database:log, mysql, user-snort password=toor dname=snort host=localhost
+
+sudo nano /etc/snort/rules/loca.rules
+add first line in msg rev:1;
+alert icmp 192.168.1.190 any -> any any (msg: "Ping 190"; sid:1000001; rev:1;)
+same 3
+
+wget .pl file from sir server
+chmod 755 that file
+./create-sidmap.p1 /etc/snort/rules/
+sudo sh -c './create-sidmap.p1 /etc/snort/rules/ > /etc/snort/sid-msg.map'
+sudo snort -1 -i ens33 -u snort -g snort -c /etc/snort/snort.conf
+sudo barnyard2 -c /etc/snort/barnyard2.conf -d /var/log/snort/ -f snort.u2 -w /var/log/snort/barnyard2.waldo -g snort -u snort
+Take more 2 putty : duplicate session ( 1 putty:Snort, 1 putty:Bardyan)
+new putty3:
+sudo mysql -u root -p
+use snort show tables3
+desc iphdr
+select ip_src,ip_dst from iphdr;
+
+
+
+
+BASE (Basic Analysis and Security Engine)
+
+ss -ant | grep 3306
+sudo nano /etc/mysql/mariadb.conf.d/50-server.cnd
+bind-address = 0.0.0.0
+sudo systemctl restart mariadb.service
+ss -ant | grep 3306
+
+Open deb8
+serach ip
+
+in deb10
+mysql -u root -p
+GRANT,CREATE,INSERT,SELECT,DELETE,UPDATE ON snort.* TO 'snort'@'ip of deb 8' IDENTIFIED BY 'toor';
+FLUSH PRIVILEGES;
+exit
+
+in deb8
+sudo nano /etc/apt/sources.list
+deb http://deb.debian.org/debian/ jessie main
+sudo apt-get update
+sudo apt-get install mariadb-client
+mysql -usnort -p'TOOR' -h[ip of deb10]
+yse snort;
+show tables;
+exit
+
+sudo apt-get install apache2 php5 p7zip libapache2-mod-php5 php5-mcrypt php5-mysqlnd libphp-adodb unzip
+mkdir temp
+cd temp
+wget link of sir ka server
+ls -l
+tar zxf that file
+ls -l 
+mv base-1.4.5 /var/www/html/base
+chown -R www-data:www-data /var/www/html/base
+
+nano /etc/php5/apache2/php.ini
+line number 449
+error_reporting = E_ALL & -E_NOTICE
+
+sysytemctl restart apache2
+
+
+search google: ip of deb8/base
+all green then continue
+path of adodb : /usr/share/php/adodb
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

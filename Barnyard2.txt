@@ -1,0 +1,61 @@
+BARNYARD2
+
+sudo apt-get install autoconf automake default-libmysqlclient-dev dos2unix libmariadbclient-dev libmariadbd-dev libtool mariadb-client mariadb-server unzip
+In Snort.conf step6, output modified:filename snort.u2, limit 128
+
+*DOWNLOAD AND INSTALL BARNYARD2
+make a directory and download and extract that zip file from sir site.
+unzip that file > /dev/null 
+then enter into unzip folder and eun this command sudo ./autogen.sh (for configure file)
+sudo ln -s /usr/include/dumbnet.h /usr/include/dnet.h
+sudo ldconfig
+sudo ./configure --with-mysql --with-mysql-libraries=/usr/lib/x86_64-linux-gnu/
+sudo make 
+sudo make install
+sudo cp etc/barnyard2.conf /etc/snort/
+sudo mkdir /var/log/barnyard2
+sudo chown snort.snort /var/log/barnyard2
+sudo touch /var/log/snort/barnyard2.waldo
+sudo chown snort.snort /var/log/snort/barnyard2.waldo
+
+mysql -u root -p 
+create databse snort;
+use mysql;
+SELECT Host, User, Password, plugin FROM user;
+UPDATE user set plugin='' WHERE user='root';
+SELECT Host, User, Password, plugin FROM user;
+FLUSH PRIVILEGES; (applying changes authentication)
+exit
+
+sudo systemctl restart mariadb.service
+sudo mysql_secure_installation
+mysql -u root -p
+use snort
+source path of the schemas and create_mysql
+CREATE USER 'snort'@'localhost' IDENTIFIED BY 'toor';
+GRANT CREATE, INSERT, SELECT, DELETE, UPDATE ON snort.* TO 'snort'@'localhost';
+FLSUH PRIVILEGES;
+EXIT
+
+
+sudo nano /etc/snort/barnyard.conf
+add this last line
+output database:log, mysql, user-snort password=toor dname=snort host=localhost
+
+sudo nano /etc/snort/rules/loca.rules
+add first line in msg rev:1;
+alert icmp 192.168.1.190 any -> any any (msg: "Ping 190"; sid:1000001; rev:1;)
+same 3
+
+wget .pl file from sir server
+chmod 755 that file
+./create-sidmap.p1 /etc/snort/rules/
+sudo sh -c './create-sidmap.p1 /etc/snort/rules/ > /etc/snort/sid-msg.map'
+sudo snort -1 -i ens33 -u snort -g snort -c /etc/snort/snort.conf
+sudo barnyard2 -c /etc/snort/barnyard2.conf -d /var/log/snort/ -f snort.u2 -w /var/log/snort/barnyard2.waldo -g snort -u snort
+Take more 2 putty : duplicate session ( 1 putty:Snort, 1 putty:Bardyan)
+new putty3:
+sudo mysql -u root -p
+use snort show tables3
+desc iphdr
+select ip_src,ip_dst from iphdr;
